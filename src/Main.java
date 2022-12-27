@@ -11,9 +11,12 @@ public class Main {
         //System.out.printf("Part 1: %d\n", day02.solvePart1());
         //System.out.printf("Part 2: %d\n", day02.solvePart2());
         //System.out.println("\nDay 03:");
-        AOCProblem day03 = new Day03("input/03.txt");
-        System.out.printf("Part 1: %d\n", day03.solvePart1());
-        System.out.printf("Part 2: %d\n", day03.solvePart2());
+        //AOCProblem day03 = new Day03("input/03.txt");
+        //System.out.printf("Part 1: %d\n", day03.solvePart1());
+        //System.out.printf("Part 2: %d\n", day03.solvePart2());
+        AOCProblem day04 = new Day04("input/04.txt");
+        System.out.printf("Part 1: %d\n", day04.solvePart1());
+        System.out.printf("Part 2: %d\n", day04.solvePart2());
 
     }
 }
