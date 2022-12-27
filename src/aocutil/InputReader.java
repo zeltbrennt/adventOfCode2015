@@ -18,7 +18,7 @@ public class InputReader {
                 puzzle.add(line);
             }
         } catch (IOException e) {
-            System.out.println("File not found.");
+            System.out.println("File not found. Did you download the input files?");
         }
         return puzzle;
     }
@@ -27,10 +27,10 @@ public class InputReader {
         BufferedReader file = null;
         String puzzle = null;
         try {
-            file = new BufferedReader(new FileReader("src/resources/01.txt"));
+            file = new BufferedReader(new FileReader(source));
             puzzle = file.readLine();
         } catch (IOException e) {
-            System.out.println("File not found.");
+            System.out.println("File not found. Did you download the input files?");
         }
         return puzzle;
     }
