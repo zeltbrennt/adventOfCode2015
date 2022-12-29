@@ -8,11 +8,10 @@ import java.util.regex.Pattern;
 public class Day06 implements AOCProblem {
     private static final int WIDTH = 1000;
     private static final int HEIGHT = 1000;
-
-    private final boolean[][] lights = new boolean[WIDTH][HEIGHT];
     private final String[] instructions;
     private final List<String> puzzle;
     private final int[][] coords;
+    private int[][] lights;
 
     public Day06(String inputFile) {
         this.puzzle = InputReader.multipleLines(inputFile);
@@ -45,17 +44,17 @@ public class Day06 implements AOCProblem {
             this.coords[j] = coords.clone();
         }
     }
-    
+
     @Override
     public int solvePart1() {
+        this.lights = new int[WIDTH][HEIGHT];
         for (int i = 0; i < instructions.length; i++) {
-            System.out.println(puzzle.get(i));
             for (int x = coords[i][0]; x <= coords[i][2]; x++) {
                 for (int y = coords[i][1]; y <= coords[i][3]; y++) {
                     switch (instructions[i]) {
-                        case "on" -> lights[x][y] = true;
-                        case "off" -> lights[x][y] = false;
-                        case "toggle" -> lights[x][y] = !lights[x][y];
+                        case "on" -> lights[x][y] = 1;
+                        case "off" -> lights[x][y] = 0;
+                        case "toggle" -> lights[x][y] = 1 - lights[x][y];
                     }
                 }
             }
@@ -63,15 +62,33 @@ public class Day06 implements AOCProblem {
         int sum = 0;
         for (int x = 0; x < WIDTH; x++) {
             for (int y = 0; y < HEIGHT; y++) {
-                sum += lights[x][y] ? 1 : 0;
+                sum += lights[x][y];
             }
-
         }
         return sum;
     }
 
     @Override
     public int solvePart2() {
-        return 0;
+        this.lights = new int[WIDTH][HEIGHT];
+        for (int i = 0; i < instructions.length; i++) {
+            for (int x = coords[i][0]; x <= coords[i][2]; x++) {
+                for (int y = coords[i][1]; y <= coords[i][3]; y++) {
+                    switch (instructions[i]) {
+                        case "on" -> lights[x][y]++;
+                        case "off" -> lights[x][y] = Math.max(0, lights[x][y] - 1);
+                        case "toggle" -> lights[x][y] += 2;
+                    }
+
+                }
+            }
+        }
+        int sum = 0;
+        for (int x = 0; x < WIDTH; x++) {
+            for (int y = 0; y < HEIGHT; y++) {
+                sum += lights[x][y];
+            }
+        }
+        return sum;
     }
 }
