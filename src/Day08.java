@@ -7,29 +7,30 @@ public class Day08 implements AOCProblem {
 
     private final List<String> puzzle;
 
-
     public Day08(String input) {
         puzzle = InputReader.multipleLines(input);
     }
+
     @Override
     public int solvePart1() {
-        int charsInCode = 0;
-        int charsInString = 0;
-        for (String s : puzzle) {
-            charsInCode += s.length();
-            String f = s.substring(1, s.length()-1)
-                    .replaceAll("\\\\\"", "A")
-                    .replaceAll("\\\\x[a-z0-9]{2}", "B")
-                    .replaceAll("\\\\{2}", "C");
-            System.out.println(f);
-            System.out.printf("%d, %d\n", s.length(), f.length());
-            charsInString += f.length();
-        }
-        return charsInCode - charsInString;
+        int str = puzzle.stream().mapToInt(String::length).sum();
+        int code = puzzle.stream()
+                .map(x -> x.replace("\\\\", "S"))
+                .map(x -> x.replace("\\\"", "Q"))
+                .map(x -> x.replaceAll("\\\\x[a-f0-9]{2}", "X"))
+                .mapToInt(x -> x.length() - 2)
+                .sum();
+        return str - code;
     }
 
     @Override
     public int solvePart2() {
-        return 0;
+        int str = puzzle.stream().mapToInt(String::length).sum();
+        int code = puzzle.stream()
+                .map(x -> x.replace("\"", "QQ"))
+                .map(x -> x.replace("\\", "SS"))
+                .mapToInt(x -> x.length() + 2)
+                .sum();
+        return code - str;
     }
 }
