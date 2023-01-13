@@ -1,10 +1,7 @@
 import aocutil.AOCProblem;
 import aocutil.InputReader;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Day14 implements AOCProblem {
 
@@ -22,10 +19,10 @@ public class Day14 implements AOCProblem {
 
     @Override
     public int solvePart1() {
-        for (Raindeer raindeer : racers) {
-            int flyIntervals = RACE_DURATION / (raindeer.duration + raindeer.rest);
-            int distance = flyIntervals * raindeer.speed * raindeer.duration;
-            distance += Math.min(RACE_DURATION % (raindeer.duration + raindeer.rest), raindeer.duration) * raindeer.speed;
+        for (Raindeer rd : racers) {
+            int flyIntervals = RACE_DURATION / (rd.duration + rd.rest);
+            int distance = flyIntervals * rd.speed * rd.duration;
+            distance += Math.min(RACE_DURATION % (rd.duration + rd.rest), rd.duration) * rd.speed;
             maxDistance = Math.max(distance, maxDistance);
         }
         return maxDistance;
@@ -33,7 +30,23 @@ public class Day14 implements AOCProblem {
 
     @Override
     public int solvePart2() {
-        return 0;
+        maxDistance = 0;
+        Map<Raindeer, Integer> status = new HashMap<>();
+        Map<Raindeer, Integer> points = new HashMap<>();
+        racers.forEach(rd -> {
+            status.put(rd, 0);
+            points.put(rd, 0);
+        });
+        for (int i = 0; i < RACE_DURATION; i++) {
+            for (Raindeer rd : racers) {
+                int distance = status.get(rd);
+                distance += i % (rd.duration + rd.rest) < rd.duration ? rd.speed : 0;
+                maxDistance = Math.max(distance, maxDistance);
+                status.put(rd, distance);
+            }
+            racers.stream().filter(rd -> status.get(rd) == maxDistance).forEach(rd -> points.put(rd, points.get(rd) + 1));
+        }
+        return points.values().stream().max(Integer::compareTo).get();
     }
 
     private record Raindeer(int speed, int duration, int rest) {
