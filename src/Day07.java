@@ -8,6 +8,7 @@ import java.util.Map;
 public class Day07 implements AOCProblem {
 
     private final Map<String, String[]> graph;
+    private int solution;
 
     public Day07(String puzzleFile) {
         List<String> puzzle = InputReader.multipleLines(puzzleFile);
@@ -42,13 +43,13 @@ public class Day07 implements AOCProblem {
     public int solvePart1() {
         Map<String, Integer> memo = new HashMap<>();
         /* for (String k : graph.keySet()) System.out.printf("%s: %d\n", k, getValue(k, memo));*/
-        return getValue("a", memo);
+        solution = getValue("a", memo);
+        return solution;
     }
 
     @Override
     public int solvePart2() {
-        int newValue = solvePart1();
-        graph.put("b", new String[]{String.valueOf(newValue)});
+        graph.put("b", new String[]{String.valueOf(solution)});
         return solvePart1();
     }
 }
