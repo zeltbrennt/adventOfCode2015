@@ -64,7 +64,16 @@ public class Day13 implements AOCProblem {
 
     @Override
     public int solvePart2() {
-        return 0;
+        Map<String, Integer> indifference = new HashMap<>();
+        for (String guest : guests.keySet()) {
+            guests.get(guest).happiness.put("Myself", 0);
+            indifference.put(guest, 0);
+        }
+        guests.put("Myself", new Guest("Myself"));
+        guests.get("Myself").happiness.putAll(indifference);
+        maximumHappiness = Integer.MIN_VALUE;
+        tableOrder = guests.keySet().toArray(new String[0]);
+        return solvePart1();
     }
 
     private class Guest {
