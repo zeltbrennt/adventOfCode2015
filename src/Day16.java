@@ -1,18 +1,42 @@
 import aocutil.AOCProblem;
+import aocutil.InputReader;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Day16 implements AOCProblem {
 
     private static final Sue REFERENCE = new Sue(3, 7, 2, 3, 0, 0, 5, 3, 2, 1);
-    private final Sue[] aunts = new Sue[500];
+    private final List<Sue> aunts = new ArrayList<>();
+    private final String[] properties = new String[]{"children", "cats", "samoyeds",
+            "pomeranians", "akitas", "vizslas", "goldfish", "trees", "cars", "perfumes"};
 
     public Day16(String s) {
-        Sue test = new Sue(null, null, null, null, 3, null, 0, null, 9, null);
-        aunts[0] = test;
+        for (String line : InputReader.multipleLines(s)) {
+            Integer[] prop = new Integer[10];
+            for (int i = 0; i < properties.length; i++) {
+                int idx = line.indexOf(properties[i]);
+                if (idx != -1) {
+                    int idxStop = line.indexOf(',', idx);
+                    idxStop = idxStop == -1 ? line.length() : idxStop;
+                    prop[i] = Integer.parseInt(line.substring(idx, idxStop).replaceAll("\\D", "").trim());
+                }
+            }
+            aunts.add(new Sue(prop[0], prop[1], prop[2], prop[3], prop[4], prop[5], prop[6], prop[7], prop[8], prop[9]));
+        }
     }
 
     @Override
     public int solvePart1() {
-        return REFERENCE.equals(aunts[0]) ? 1 : 0;
+        int x = -1;
+        for (int i = 0; i < aunts.size(); i++) {
+            Sue aunt = aunts.get(i);
+            if (REFERENCE.equals(aunt)) {
+                System.out.println(aunt);
+                x = i;
+            }
+        }
+        return x+1;
     }
 
     @Override
