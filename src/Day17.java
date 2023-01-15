@@ -1,23 +1,32 @@
 import aocutil.AOCProblem;
 import aocutil.InputReader;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.List;
-
 public class Day17 implements AOCProblem {
 
-    private Deque<Container> containers = new ArrayDeque<>();
+    private static final int CAPACITY = 150;
+    private final int[] containers;
+    private int nCombo = 0;
+
     public Day17(String s) {
-        List<String> values = InputReader.multipleLines(s);
-        for (int i = 0; i < values.size(); i++) {
-            containers.push(new Container(i, Integer.parseInt(values.get(i))));
+        containers = InputReader.multipleLines(s).stream().mapToInt(Integer::parseInt).toArray();
+    }
+
+    private void testCombinations() {
+        int set = 1 << containers.length;
+        for (int i = 0; i < set; i++) {
+            int volume = 0, pos = i;
+            for (int container : containers) {
+                volume += container * (1 & pos);
+                pos >>= 1;
+            }
+            if (volume == CAPACITY) nCombo++;
         }
     }
 
     @Override
     public int solvePart1() {
-        return 0;
+        testCombinations();
+        return nCombo;
     }
 
     @Override
@@ -25,5 +34,6 @@ public class Day17 implements AOCProblem {
         return 0;
     }
 
-    private record Container(int id, int capacity) {}
+    private record Container(int id, int capacity) {
+    }
 }
