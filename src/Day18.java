@@ -12,7 +12,7 @@ public class Day18 implements AOCProblem {
         List<Integer> status = new ArrayList<>();
         for (String line : InputReader.multipleLines(s)) {
             for (char c : line.toCharArray()) {
-                if (c == '#') status.add(1);
+                if (c == '#') status.add(10);
                 else status.add(0);
             }
         }
@@ -22,7 +22,7 @@ public class Day18 implements AOCProblem {
         }
     }
 
-    public int[] exportStart() {
+    public int[] exportPart1() {
         return start;
     }
     @Override
