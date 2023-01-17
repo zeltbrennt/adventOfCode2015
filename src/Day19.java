@@ -1,14 +1,16 @@
 import aocutil.AOCProblem;
 import aocutil.InputReader;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class Day19 implements AOCProblem {
 
     private final List<String> replVal = new ArrayList<>();
     private final List<String> replWith = new ArrayList<>();
     private final String molecule;
-    private int minReplacements = Integer.MAX_VALUE;
 
     public Day19(String s) {
         String molecule = "";
@@ -43,21 +45,9 @@ public class Day19 implements AOCProblem {
         return distinct.size();
     }
 
-    private int replace(String str, int n, Map<String, Integer> memo) {
-        if (memo.containsKey(str)) {
-            return memo.get(str);
-        }
-        if (str.equals("e")) {
-            minReplacements = Math.min(minReplacements, n);
-            System.out.println(n);
-            memo.put(str, n);
-            return n;
-        }
-        if (str.contains("e") && str.length() > 1 || n > minReplacements) {
-            System.out.println("abort");
-            memo.put(str, n);
-            return -1;
-        }
+    private int replace(String str, int n) {
+        if (str.equals("e")) return n;
+        int result = -1;
         for (int i = 0; i < replVal.size(); i++) {
             int start = 0, idx;
             String pattern = replWith.get(i);
@@ -67,16 +57,15 @@ public class Day19 implements AOCProblem {
                 if (idx == -1) break;
                 String replaced = str.substring(0, idx) + repl + str.substring(idx + pattern.length());
                 start = idx + 1;
-                int result = replace(replaced, n+1, memo);
-                if (result == -1) break;
+                result = replace(replaced, n + 1);
+                if (result != -1) return result;
             }
         }
-        memo.put(str, n);
-        return n;
+        return result;
     }
+
     @Override
     public int solvePart2() {
-        replace(molecule, 0, new HashMap<>());
-        return minReplacements;
+        return replace(molecule, 0);
     }
 }
