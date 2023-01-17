@@ -1,44 +1,44 @@
 import aocutil.AOCProblem;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Day20 implements AOCProblem {
 
     private final int target;
 
     public Day20(int s) {
-        target = s;
+        target = s / 10;
     }
 
-    private List<Integer> getPrimeFactors(int number, List<Integer> primes) {
-        List<Integer> factors = new ArrayList<>();
-        for (int prime : primes) {
-            if (number % prime == 0) {
-                factors.add(prime);
-                number /= prime;
+    private Set<Integer> getPrimeFactors(int number) {
+        Set<Integer> factors = new HashSet<>();
+        while (number % 2 == 0) {
+            factors.add(number);
+            factors.add(2);
+            number /= 2;
+        }
+        for (int i = 3; i <= Math.sqrt(number); i += 2) {
+            while (number % i == 0) {
+                factors.add(i);
+                number /= i;
             }
         }
+        if (number > 2) factors.add(number);
         return factors;
     }
 
     @Override
     public int solvePart1() {
 
-        //only for housnumber >= 3
-        List<Integer> primes = new ArrayList<>();
-        primes.add(2);
-        int houseNumber = 3;
+        //1701888 too high
+        int houseNumber = 1 << 16;
         while (true) {
-            List<Integer> factors = getPrimeFactors(houseNumber, primes);
-            if (factors.isEmpty()) primes.add(houseNumber);
-            int presents = 10 + houseNumber * 10;
-            for (int factor : factors) {
-                presents += factor * 10;
-            }
-            if (presents >= target) {
-                return houseNumber;
-            }
+            Set<Integer> factors = getPrimeFactors(houseNumber);
+            factors.add(houseNumber);
+            int presents = 1;
+            for (int factor : factors) presents += factor;
+            if (presents >= target) return houseNumber;
             houseNumber++;
         }
     }
