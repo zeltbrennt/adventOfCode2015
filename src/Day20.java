@@ -8,36 +8,29 @@ public class Day20 implements AOCProblem {
     private final int target;
 
     public Day20(int s) {
-        target = s / 10;
+        target = s;
     }
 
-    private Set<Integer> getPrimeFactors(int number) {
+    private Set<Integer> getFactors(int number) {
         Set<Integer> factors = new HashSet<>();
-        while (number % 2 == 0) {
-            factors.add(number);
-            factors.add(2);
-            number /= 2;
-        }
-        for (int i = 3; i <= Math.sqrt(number); i += 2) {
-            while (number % i == 0) {
+        for (int i = 1; i <= Math.sqrt(number); i++) {
+            int remainder = number % i;
+            int divisor = number / i;
+            if (remainder == 0) {
                 factors.add(i);
-                number /= i;
+                factors.add(divisor);
             }
         }
-        if (number > 2) factors.add(number);
         return factors;
     }
 
     @Override
     public int solvePart1() {
 
-        //1701888 too high
-        int houseNumber = 1 << 16;
+        int houseNumber = 1 << 18;
         while (true) {
-            Set<Integer> factors = getPrimeFactors(houseNumber);
-            factors.add(houseNumber);
-            int presents = 1;
-            for (int factor : factors) presents += factor;
+            Set<Integer> factors = getFactors(houseNumber);
+            int presents = factors.stream().mapToInt(factor -> factor).map(factor -> 10 * factor).sum();
             if (presents >= target) return houseNumber;
             houseNumber++;
         }
