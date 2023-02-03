@@ -47,6 +47,24 @@ public class Day22 implements AOCProblem {
             case RECHARGE -> rechargeEffect = 5;
         }
     }
+
+    void playerTurn() {
+        shieldEffect = Math.max(0, shieldEffect - 1);
+        if (rechargeEffect > 0) {
+            playerMP += 101;
+            rechargeEffect--;
+        }
+        // cast spell ??
+    }
+
+    void bossTurn() {
+        if (poisonEffect > 0) {
+            bossHP -= 3;
+        }
+        playerHP -= shieldEffect > 0 ? Math.min(1, bossDMG - 7) : bossDMG;
+    }
+
+
     @Override
     public int solvePart1() {
         return 0;
