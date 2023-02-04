@@ -66,7 +66,7 @@ public class Day22 implements AOCProblem {
             case RECHARGE -> rechargeEffect = 5;
         }
         if (bossHP <= 0) {
-            System.out.println(memo + "boss dead \n===============================> " + manaSpend + " <===============================");
+       //     System.out.println(memo + "boss dead \n===============================> " + manaSpend + " <===============================");
             return manaSpend;
         }
         //boss effect and damage
@@ -87,39 +87,28 @@ public class Day22 implements AOCProblem {
             memo += "Recharge provides 101 mana, timer is now " + rechargeEffect + "\n";
         }
         if (bossHP <= 0) {
-            System.out.println(memo + "boss dead \n===============================> " + manaSpend + " <===============================");
+        //    System.out.println(memo + "boss dead \n===============================> " + manaSpend + " <===============================");
             return manaSpend;
         }
         memo += "Boss deals 8 " + (shieldEffect > 0 ? "- 7 = 1 " : "") + "damage\n\n";
         playerHP -= shieldEffect > 0 ? Math.min(1, bossDMG - 7) : bossDMG;
         if (playerHP <= 0) return Integer.MAX_VALUE;
         for (Spell nextSpell : spells) {
-            if (nextSpell.name() == spellName.RECHARGE && rechargeEffect > 0) continue;
-            if (nextSpell.name() == spellName.POISON && poisonEffect > 0) continue;
-            if (nextSpell.name() == spellName.SHIELD && shieldEffect > 0) continue;
+            // spells can be cast on the turn they'll run out...
+            if (nextSpell.name() == spellName.RECHARGE && rechargeEffect > 1) continue;
+            if (nextSpell.name() == spellName.POISON && poisonEffect > 1) continue;
+            if (nextSpell.name() == spellName.SHIELD && shieldEffect > 1) continue;
             if (nextSpell.MPCost() > playerMP) continue;
-            if (nextSpell.MPCost() + manaSpend > minMana) continue;
+            if (nextSpell.MPCost() + manaSpend >= minMana) continue;
             minMana = Math.min(minMana, takeTurn(turn + 1, nextSpell, bossHP, playerHP, playerMP, manaSpend, poisonEffect, rechargeEffect, shieldEffect, memo));
         }
         return minMana;
     }
 
-//    void breadthFirstPrint() {
-//        Deque<Spell> queue = new ArrayDeque<>(List.of(spells));
-//        while (!queue.isEmpty()) {
-//            Spell spell = queue.removeFirst();
-//            visited.add(node);
-//            System.out.printf("%s ", node); //do something /w the element after popping from queue
-//            for (T neighbor : graph.get(node)) {
-//                if (!visited.contains(neighbor)) queue.addLast(neighbor);
-//            }
-//        }
-//    }
-
     @Override
     public int solvePart1() {
         for (Spell spell : spells) {
-            minMana = takeTurn(0, spell, bossHP, playerHP, playerMP, 0, 0, 0, 0, "");
+            minMana = Math.min(minMana, takeTurn(0, spell, bossHP, playerHP, playerMP, 0, 0, 0, 0, ""));
         }
         return minMana;
     }
@@ -128,6 +117,6 @@ public class Day22 implements AOCProblem {
     public int solvePart2() {
         minMana = Integer.MAX_VALUE;
         difficult = true;
-        return solvePart1(); //1295 too high
+        return solvePart1();
     }
 }
