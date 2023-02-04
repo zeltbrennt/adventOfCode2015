@@ -15,14 +15,10 @@ public class Day23 implements AOCProblem {
 
     @Override
     public int solvePart1() {
-/*        for (int i = 0; i < instructions.size(); i++) {
-            String instruction = instructions.get(i);
-            System.out.println(i + " " + instruction);
-        }*/
         int idx = 0;
         while (idx < instructions.size()) {
             String[] tokens = instructions.get(idx).split(",* ");
-            System.out.printf("%02d: %-12s", idx, instructions.get(idx));
+            //  System.out.printf("%02d: %-12s", idx, instructions.get(idx));
             switch (tokens[0]) {
                 case "hlf" -> register.put(tokens[1], register.get(tokens[1]) / 2);
                 case "tpl" -> register.put(tokens[1], register.get(tokens[1]) * 3);
@@ -31,7 +27,7 @@ public class Day23 implements AOCProblem {
                 case "jio" -> idx += register.get(tokens[1]) == 1 ? Integer.parseInt(tokens[2]) - 1 : 0;
                 case "jie" -> idx += register.get(tokens[1]) % 2 == 0 ? Integer.parseInt(tokens[2]) - 1 : 0;
             }
-            System.out.printf("a = %d, b = %d\n", register.get("a"), register.get("b"));
+            //  System.out.printf("a = %d, b = %d\n", register.get("a"), register.get("b"));
             idx++;
         }
         return register.get("b");
@@ -41,6 +37,6 @@ public class Day23 implements AOCProblem {
     public int solvePart2() {
         register.put("a", 1);
         register.put("b", 0);
-        return 0;
+        return solvePart1();
     }
 }
