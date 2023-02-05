@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Day24 implements AOCProblem {
     private final List<String> packages;
@@ -15,49 +14,32 @@ public class Day24 implements AOCProblem {
         this.packages = InputReader.multipleLines(s);
     }
 
-    private boolean isBalanced(List<Integer> arr, int target) {
-        for (int i = 1; i < arr.size() / 2; i++) {
-            System.out.println(i);
-            List<int[]> combos = Combinations.getCombination(arr, arr.size(), i);
-            for (int[] combo : combos) {
-            int weight = 0;
-                List<Integer> remaining = new ArrayList<>(arr);
-                for (int p : combo) {
-                    weight += p;
-                    remaining.remove((Integer) p);
-                }
-                if (weight != target) continue;
-                if (remaining.stream().mapToDouble(x -> x).sum() == weight) return true;
-            }
-        }
-        return false;
-    }
-
     @Override
     public int solvePart1() {
         //List<Integer> packages = new ArrayList<>(List.of(1, 2, 3, 4, 5, 7, 8, 9, 10, 11));
         List<Integer> packages = new ArrayList<>();
         this.packages.forEach(x -> packages.add(Integer.parseInt(x)));
         Collections.reverse(packages);
+        long result = Long.MAX_VALUE;
         boolean found = false;
-        for (int i = 1; i < packages.size() / 2; i++) {
-            System.out.println(i);
+        for (int i = 1; i <= packages.size() / 2 && !found; i++) {
             List<int[]> combos = Combinations.getCombination(packages, packages.size(), i);
             for (int[] combo : combos) {
-            int weight = 0;
                 List<Integer> remaining = new ArrayList<>(packages);
                 for (int p : combo) {
                     remaining.remove((Integer) p);
-                    weight += p;
                 }
-                if (isBalanced(remaining, weight)) {
-                    System.out.println(Arrays.toString(combo) + " " + remaining);
+                double target = Arrays.stream(combo).sum();
+                double test = remaining.stream().mapToDouble(Integer::doubleValue).sum();
+                long prod = Arrays.stream(combo).mapToLong(Long::valueOf).reduce(1L, (a, b) -> a * b);
+                if (test == 2 * target && prod < result) {
+                    System.out.println(Arrays.toString(combo) + " " + prod);
+                    result = prod;
                     found = true;
                 }
             }
-            if (found) break;
         }
-        return 0;
+        return (int) result;
     }
 
     @Override
