@@ -1,6 +1,10 @@
 import aocutil.AOCProblem;
+import aocutil.Combinations;
 import aocutil.InputReader;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Day24 implements AOCProblem {
@@ -12,22 +16,16 @@ public class Day24 implements AOCProblem {
 
     @Override
     public int solvePart1() {
-        int[] r = new int[]{1, 2, 3, 4, 5, 7, 8, 9, 10, 11};
-        for (int i = 1; i < r.length; i++) {
-            for (int j = 1; j < 1 << r.length; j++) {
-                if (Integer.bitCount(j) == i) {
-                    String bits = String.format("%" + r.length + "s", Integer.toBinaryString(j)).replace(' ', '0');
-                    System.out.println(bits);
-                    int targetWeight = 0;
-                    System.out.print("[ ");
-                    for (int k = 0; k < bits.length(); k++) {
-                        if (bits.charAt(k) == '1') {
-                            System.out.printf("%02d ", r[k]);
-                            targetWeight += r[k];
-                        }
-                    }
-                    System.out.println("] = " + targetWeight);
+        List<Integer> packages = new ArrayList<>(List.of(1, 2, 3, 4, 5, 7, 8, 9, 10, 11));
+        Collections.reverse(packages);
+        for (int i = 1; i < packages.size(); i++) {
+            List<int[]> combos = Combinations.getCombination(packages, packages.size(), i);
+            for (int[] combo : combos) {
+                List<Integer> remaining = new ArrayList<>(packages);
+                for (int p : combo) {
+                    remaining.remove((Integer) p);
                 }
+                System.out.println(Arrays.toString(combo) + " " + remaining);
             }
         }
         return 0;
